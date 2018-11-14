@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	
+	<!-- Work center type in workcenter -->
+	<record id="view_work_center_custom" model="ir.ui.view">
+  		<field name="name">flexible_printing.workcenter.custom.form.inherited</field>
+  		<field name="model">mrp.workcenter</field>
+  		<field name="inherit_id" ref="mrp.mrp_workcenter_view"></field>
+  		<field name="arch" type="xml">
+  			<xpath expr="//field[@name='name']" position="before">
+  				<field name="work_center_type" widget="many2one_tags"></field>
+  			</xpath>
+  		</field>
+  	</record>
+    <!-- End Work center type in workcenter -->
+    
+    <!-- Work center type -->
+	<record model="ir.ui.view" id="work_center_tree">
+      <field name="name">flexible_printing.workcenter_type.tree</field>
+      <field name="model">flex_print.workcenter_type</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="code"/>
+          <field name="parameters" widget="many2many_tags" />
+        </tree>
+      </field>
+    </record>
+    
+    <record model="ir.ui.view" id="work_center_form">
+      <field name="name">flexible_printing.workcenter_type.form</field>
+      <field name="model">flex_print.workcenter_type</field>
+      <field name="arch" type="xml">
+      	<form string="Work Center Parameters">
+      		<sheet>
+      			<div class="row">
+            		<div class="col-sm-6">
+            			<group>
+		                 	<field name="name"/>
+		                </group>
+            		</div>
+            		<div class="col-sm-6">
+            			<group>
+		                 	<field name="code" attrs="{'readonly': [('id', '>', 0)]}" help="Codes are used to read data from the product onto the printed manufacturing order"/>
+		                 </group>
+            		</div>
+            		<div class="col-sm-12">
+            			<group>
+		                 	<field name="parameters" />
+		                 </group>
+            		</div>
+            	</div>
+	         </sheet>
+        </form>
+      </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="action_list_work_center_type">
+      <field name="name">Work Center Types</field>
+      <field name="res_model">flex_print.workcenter_type</field>
+      <field name="view_type">form</field>
+      <field name="view_id" ref="work_center_tree"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <!-- End work center type -->
+    
+    <!-- Cliche/Cylinder Management Product -->
+    <record id="view_flexible_printing_product_printing_params_groups_search" model="ir.ui.view">
+        <field name="name">flexible_printing.product_printing_params.groups.search</field>
+        <field name="model">flex_print.product.printing.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+         	<filter name="printing_form" string="Unprinted" domain="[('printing_form', 'not in', ['ROTO', 'FLEXO'])]"/>
+            <filter name="printing_form" string="Roto" domain="[('printing_form', '=', 'ROTO')]"/>
+            <filter name="printing_form" string="Flexo" domain="[('printing_form', '=', 'FLEXO')]"/>
+            <group expand="0" string="Group By...">
+                 <filter string="Type" domain="[]" context="{'group_by':'printing_form'}"/>
+            </group>
+        </field>
+    </record>
+        
+    <record model="ir.ui.view" id="product_printing_params_tree">
+      <field name="name">flexible_printing.product_printing_params.tree</field>
+      <field name="model">flex_print.product.printing.report</field>
+      <field name="arch" type="xml">
+	        <tree create="false">
+	        	  <field name="printed_name"/>
+	        	  <field name="product_name"/>
+	        	  <field name="printing_form"/>
+		          <field name="customer"/>
+		          <field name="last_mo_date"/>
+		          <button name="open_product_printing_form" class="oe_stat_button" string="Edit" icon="fa-pencil" type="object"/>
+	        </tree>
+      </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="action_list_cylinder_cliche_management">
+      <field name="name">Cylinder/Cliche Management</field>
+      <field name="res_model">flex_print.product.printing.report</field>
+      <field name="view_id" ref="product_printing_params_tree"/>
+      <field name="view_mode">tree</field>
+    </record>
+    <!-- End Cliche/Cylinder Management Product -->
+    
+    <!-- Workcenter Parameters -->
+    <record model="ir.ui.view" id="workcenter_parameters_tree">
+        <field name="name">flexible_printing.workcenter_parameters.tree</field>
+        <field name="model">flex_print.workcenter_parameters</field>
+        <field name="arch" type="xml">
+        	<tree>
+	        	<field name="name" />
+	          	<field name="arabic_name" string="Arabic Name"/>
+	        </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="workcenter_parameters_form">
+        <field name="name">flexible_printing.workcenter_parameters.form</field>
+        <field name="model">flex_print.workcenter_parameters</field>
+        <field name="arch" type="xml">
+            <form string="Work Center Parameters">
+            	<div class="row">
+            		<div class="col-sm-6">
+            			<group>
+		                 	<field name="code"  attrs="{'readonly': [('id', '>', 0)]}" />
+		                </group>
+            		</div>
+            		<div class="col-sm-6">
+            			<group>
+		                 	<field name="name" />
+		                 </group>
+            		</div>
+            	</div>
+            	<div class="row">
+            		<div class="col-sm-6">
+            			<group>
+		                 	<field name="arabic_name" string="Arabic Name"/>
+		                 </group>
+		            </div>
+		            <div class="col-sm-6">
+		                 <group>
+		                 	<field attrs="{'invisible': [('code', '!=', 'LENGTH')]}"  name="is_proportional" string="Is Proportional" help="If Checked the length will be calculated proportinally to the quantity consumed" />
+		                 </group>
+            		</div>
+            	</div>
+            </form>
+        </field>
+	</record>
+    <!-- End Workcenter Parameters -->
+    
+    <menuitem id="menu_list_action_list_work_center_type"  
+        name="Work Center Types"  
+        action="action_list_work_center_type" 
+        parent="mrp.menu_mrp_configuration"
+        sequence="99" 
+        groups="flexible_printing.group_manage_work_center_by_type" />
+        	
+    <menuitem id="menu_list_action_cylinder_cliche_management"
+            name="Cylinder/Cliche Management"
+            parent="mrp.menu_mrp_bom"
+            action="action_list_cylinder_cliche_management" 
+            sequence="99"
+            groups="flexible_printing.group_manage_work_center_by_type" />
+</odoo>

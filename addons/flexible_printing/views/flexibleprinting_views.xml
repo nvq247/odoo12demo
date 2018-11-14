@@ -1,0 +1,9 @@
+ <odoo>
+	<data>
+	    <!--<menuitem name="Flexible Printing" id="menu_flexible_printing_root" sequence="30" groups="group_flexible_printing_manager" web_icon=""/>
+		
+	    <menuitem id="menu_flexible_printing_config" name="Configuration" parent="menu_flexible_printing_root"/>
+	
+		<menuitem id="menu_flexible_printing_general_settings" name="Settings" parent="menu_flexible_printing_config" action="flexible_printing_config_settings_action" groups="base.group_system" />  -->
+     </data>
+</odoo>

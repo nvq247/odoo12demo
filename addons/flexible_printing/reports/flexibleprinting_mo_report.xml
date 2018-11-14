@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_mo_structure">
+    	<style>
+    		.m-0{
+    			margin:0 !important;
+    		}
+    		
+    		.pl-0{
+    			padding-left:0 !important
+    		}
+    		
+    		img{
+    			width: 200px;
+    		}
+    		
+    		.img_cont{
+    			position: relative; 
+    			float: left; 
+    			width: 33.33%;
+    		}
+    		.img_cont img{
+			    margin: 0 auto;
+			    width: 150px;
+			    height: 150px;
+			    object-fit: contain;
+    		}
+    		.o_report_layout_boxed table thead tr th {
+			    text-transform: none !important;
+			}
+			
+			.o_report_layout_boxed table tbody tr td:last-child{
+				background-color: #fff !important;
+			}
+			
+			.o_report_layout_boxed table tbody tr td{
+				border-right: 0px !important;
+			}
+			
+			.routing_info{
+				margin-bottom: 20px !important;
+			}
+			
+			.table-bordered > tbody > tr > td, .table-bordered{
+				border: 2px solid #000 !important;
+			}
+			
+			.header, .footer{
+				display:none!important
+			}
+    	</style>
+    	<div class="header" style="display:none!important">
+   		</div>
+   		<div class="footer"  style="display:none!important">
+		</div>
+
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page container" style="margin-top: 20px;">
+                	<table class="table table-bordered m-0" style="border: 2px solid #000 !important; margin:0 !important">
+	                        	<thead>
+	                        		<th style="border: 2px solid #000 !important;">
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				Order Number: <span t-esc="order_number" style="text-align: center; font-weight: 400; font-size:20px"></span>
+	                        			</span>
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				Order Receipt Date: <span t-esc="datetime.datetime.strftime(order_receipt_date, '%Y-%m-%d %H:%M:%S')" style="text-align: center; font-weight: 400; font-size:20px"></span>
+	                        			</span>
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				<span>Customer Name:</span> <t t-if="customer_name"><span t-esc="customer_name" style="text-align: center; font-weight: 400; font-size:20px"></span></t>
+	                        			</span>
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				Routing Name: <t t-if="routing_name"><span t-esc="routing_name" style="text-align: center; font-weight: 400; font-size:20px"></span></t>
+	                        			</span>
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				Order Quantity: <span t-esc="'{0:,.2f}'.format(order_quantity)" style="text-align: center; font-weight: 400; font-size:20px"></span> <span t-esc="order_uom" style="text-align: center; font-weight: 400; font-size:20px"></span>
+	                        			</span>
+	                        			<span style="float:left; width:50%; font-size:20px">
+	                        				Barcode: <span t-esc="product_barcode" style="text-align: center; font-weight: 400; font-size:20px"></span>
+	                        			</span>
+                        			</th>
+	                        	</thead>
+	                     		<tbody>
+				                	<t t-if="not routing_name">
+				                		<tr>
+				                        	<td  style="border: 2px solid #000 !important;"><span class="text-center"><h1>The Manufacturing Order selected does not have routing selected</h1></span></td>
+				                    	</tr>
+				                    </t>
+				                	<t t-if="routing_name">
+											<t t-foreach="operations" t-as="operation">
+						                        <!-- Title -->
+						                        <table class="table table-bordered m-0 routing_info" style="border: 2px solid #000 !important; margin:0 !important;">
+						                        	<thead>
+						                        		<th style="font-size:25px; background-color:yellow !important; color:red!important; border:2px solid red !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+						                        			<span style="float:left; width:100%; text-align:center;">
+						                        				<span t-esc="operation['operation_name']" style="text-align: center; font-weight: bold; color:red!important; -webkit-print-color-adjust: exact; print-color-adjust: exact;"></span>
+						                        			</span>
+						                        			<!--<br></br><span t-esc="operation['operation_description']" style="font-size: 15px; font-weight: 400;"></span>-->
+						                        		</th>
+						                        	</thead>
+						                        	<tbody>
+						                        		<tr>
+						                        			<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+						                        				<label style="font-size: 20px;width: 33.33%;position:relative;float:left">Machine:</label>
+						                        				<span t-esc="operation['workcenter_name']" style="font-size:20px; width: 66.66%;position:relative;float:left"></span>
+							                        		</td>
+						                        		</tr>
+						                        		<t t-if="operation['operation_materials']">
+							                        		<tr>
+							                        			<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"><label style="font-size: 20px;width: 33.33%;position:relative;float:left">Materials:</label> <span t-esc="operation['operation_materials']" style="font-size: 20px; width: 66.66%;position:relative;float:left"></span></td>
+							                        		</tr>
+						                        		</t>
+						                        		<t t-if="operation['operation_has_d2w']">
+				                        					<div style="position:relative; top: 145px;">
+				                        							<span style="position: absolute;
+																		    color: green;
+																		    font-size: 25px;
+																		    font-weight: bold;
+																		    border: 1px dashed #000;
+																		    padding: 5px 20px 5px 20px;
+																		    -webkit-transform: rotate(-35deg);
+																		    -moz-transform: rotate(-35deg);
+																		    -ms-transform: rotate(-35deg);
+																		    -o-transform: rotate(-35deg);
+																		    left: 60%;
+																		    z-index: 99999;">D2W</span>
+															    </div>
+					                        			</t>
+						                        		<t t-foreach="operation['operation_params']"  t-as="param">
+							                        		<tr>
+							                        			<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+							                        				<label t-esc="param['name']"  style="font-size:20px; width: 33.33%;float:left;"></label> 
+							                        				<span t-esc="param['value']" style="font-size:20px; width: 33.33%;float:left;text-align:center"></span>
+							                        				<label t-esc="param['arabic_name']"  style="font-size:20px; width: 33.33%;float:right;text-align:right"></label>
+							                        			</td>
+							                        		</tr>
+						                        		</t>
+						                        		<t t-if="operation['operation_imgs']">
+							                        		<tr>
+							                        			<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+							                        				<t t-foreach="operation['operation_imgs']"  t-as="op_img">
+							                        					<span t-field="op_img.image_medium" t-options='{"widget": "image"}' class="img_cont" style="position: relative; float: left; width: 33.33%;"/>
+							                        				</t>
+							                        			</td>
+							                        		</tr>
+									                    </t>
+									                    <t t-if="operation['operation_description']">
+							                        		<tr>
+							                        			<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+						                        					<span t-esc="operation['operation_description']" />
+							                        			</td>
+							                        		</tr>
+									                    </t>
+									                    <t t-if="operation['compositions']">
+									                    <tr>
+									                    	<table class="table table-bordered m-0" style="border: 2px solid #000 !important; margin:0 !important; margin-bottom:0 !important">
+									                    		<thead>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Composition</th>
+									                    			<t t-foreach="operation['compositions']['composition_list']"  t-as="compostion">
+										                        		<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+											                        		<span t-esc="compostion['name']"></span>
+										                        		</th>
+									                        		</t>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Total</th>
+									                    		</thead>
+									                    		<tbody>
+									                    			<tr>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Ratios (%)</td>
+									                    				<t t-foreach="operation['compositions']['composition_list']"  t-as="compostion">
+											                        		<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+												                        		<span t-esc="compostion['ratio']"></span> %
+											                        		</td>
+										                        		</t>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"><span t-esc="operation['compositions']['total_ratio']"></span> %</td>
+									                    			</tr>
+									                    			<tr>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Total Qty (KGS)</td>
+									                    				<t t-foreach="operation['compositions']['composition_list']"  t-as="compostion">
+											                        		<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">
+												                        		<span t-esc="compostion['quantity']"></span>
+											                        		</td>
+										                        		</t>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"><span t-esc="operation['compositions']['total_qty']"></span></td>
+									                    			</tr>
+									                    		</tbody>
+									                    	</table>
+						                        		</tr>
+						                        		</t>
+									                    <tr>
+									                    	<table class="table table-bordered m-0" style="border: 2px solid #000 !important; margin:0 !important;">
+									                    		<thead>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Production Time</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">From</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">To</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Time</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Speed</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Date</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Real Quantity</th>
+									                    			<th style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Remark</th>
+									                    		</thead>
+									                    		<tbody>
+									                    			<tr>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Shift 1</td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    			</tr>
+									                    			<tr>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;">Shift 2</td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    				<td style="background-color: #fff !important; color: #000 !imporant; border: 2px solid #000 !important;"></td>
+									                    			</tr>
+									                    		</tbody>
+									                    	</table>
+						                        		</tr>
+						                        	</tbody>
+						                        </table>
+						                        <t t-if="print_type == 'MULTI_PAGE'">
+						                        	<div class="page-break" style="page-break-before: always;"></div>
+						                        </t>
+						                        <t t-if="print_type == 'SINGLE_PAGE'">
+						                        	<div class="page-break"></div>
+						                        </t>
+						                    </t>
+				                		</t>
+			                		</tbody>
+			         	</table>
+                </div>
+            </t>
+        </t>
+    </template>
+    
+    <template id="mrp_mo_single_page_structure" inherit_id="mrp_mo_structure"></template>
+    
+    <template id="mrp_mo_multi_page_structure" inherit_id="mrp_mo_structure"></template>
+</odoo>

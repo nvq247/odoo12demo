@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="group_flexible_printing_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="flexible_printing.module_category_flexible_printing"/>
+        </record>
+        
+        <record id="group_flexible_printing_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="flexible_printing.module_category_flexible_printing"/>
+            <field name="implied_ids" eval="[(4, ref('group_flexible_printing_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_manage_work_center_by_type" model="res.groups">
+            <field name="name">Manage Work Center by Type</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+        <record id="group_manage_handles_types" model="res.groups">
+           <field name="name">Manage Handles Types</field>
+           <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+        <record id="group_manage_seals_types" model="res.groups">
+           <field name="name">Manage Seals Types</field>
+           <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+        <record id="group_manage_quantity_units" model="res.groups">
+           <field name="name">Manage Quantity Units</field>
+           <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+        <record id="group_manage_layers_types" model="res.groups">
+           <field name="name">Manage Layers Types</field>
+           <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+    </data>
+</odoo>

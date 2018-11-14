@@ -1,0 +1,199 @@
+<odoo>
+  	<data>
+		<record id="inherit_workcenter_routing" model="ir.ui.view">
+		    <field name="name">flexible_printing.workcenter.routing.custom.form.parameters.inherited</field>
+		    <field name="model">mrp.routing.workcenter</field>
+		    <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+		    <field name="arch" type="xml">
+		        <xpath expr="/form/sheet/notebook/page[2]" position="after">
+		            <page string="Work Center Images" groups="flexible_printing.group_flexible_printing_manager">
+		            	<style>
+		            		.o_form_view .o_field_widget .o_kanban_view.o_kanban_ungrouped .o_kanban_record{
+	            			    -ms-flex: 0 0 16.66666667%;
+							    -moz-flex: 0 0 16.66666667%;
+							    -webkit-box-flex: 0;
+							    -webkit-flex: 0 0 16.66666667%;
+							    flex: 0 0 16.66666667%;
+							    padding: 0;
+							    margin: 0;
+							    margin-right: 15px;
+		            		}
+				  			.delete_img{
+						         position: absolute;
+						        top: 0;
+						        left: auto;
+						        bottom: auto;
+						        right: 0;
+						        border-radius: 0 2px;
+						    }
+						    
+						    .o_kanban_view .o_kanban_record .oe_kanban_details{
+						        display: block;
+						        max-width: 100%;
+						        white-space: nowrap;
+						        overflow: hidden;
+						        text-overflow: ellipsis;
+						        vertical-align: top;
+						        padding: 6px;
+						        position: relative;
+						        background: #F9F9F9;
+						        color: #2f3136;
+						    }
+						    
+						    
+						    .o_form_view .o_field_widget .o_kanban_view.o_kanban_ungrouped {
+						        padding: 0;
+						        margin-top: 15px;
+						    }
+						    
+						    .o_kanban_view .oe_kanban_card .o_kanban_image, .o_kanban_view .o_kanban_record .o_kanban_image {
+						        width: 100%;
+						        height: 110px;
+						        overflow: hidden;
+						    }
+						    
+						    .o_kanban_view .o_kanban_record .o_kanban_image img {
+						        object-fit: contain;
+						        width: 100%;
+						        height: 100%;
+						    }
+						    
+						    .o_website_sale_image_modal_container .o_form_view .o_field_widget{
+						    	margin-bottom: 0;
+   								box-shadow: 0 2px 10px #E5E5E5;
+						    }
+						    
+						    .o_website_sale_image_modal_container {
+							    border-left: 1px solid #d9d7d7;
+							}
+							
+							.o_kanban_view .o_kanban_record .o_kanban_image + div {
+							    padding-left: 0;
+							    text-align: center;
+							}
+							
+						    .route_img > img {
+							    border: 1px solid #d9d7d7;
+							    max-height: 350px;
+							    width: auto;
+							}
+							
+							.o_field_widget.o_field_image .o_form_image_controls{
+						        opacity: 0.7;
+						        padding: 2%;
+						    }
+						
+						    .o_field_widget.o_field_image .o_form_image_controls:hover{
+						        opacity: 1;
+						    }
+						    
+						    .o_field_widget.o_field_image .o_form_image_controls > .fa {
+							    margin: 3px;
+							    cursor: pointer;
+							}
+				  		</style>
+				  		
+		            	<field name="workcenter_image_ids" mode="kanban">
+		            		<kanban string="Product Images">
+	                            <field name="name"/>
+	                            <field name="image" />
+	                            <templates>
+	                                <t t-name="kanban-box">
+	                                    <div class="oe_kanban_global_click">
+	                                        <a t-if="!read_only_mode" type="delete" class="fa fa-trash pull-right delete_img"/>
+	                                        <div class="o_kanban_image">
+	                                            <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+	                                        </div>
+	                                        <!-- <div class="oe_kanban_details">
+	                                            <field name="name"/>
+	                                        </div> -->
+	                                    </div>
+	                                </t>
+	                            </templates>
+	                        </kanban>
+							 <!-- <tree> 
+					            <field name="name" /> 
+					            <field name="image" widget='image' class="oe_avatar" /> 
+					        </tree>  -->
+						</field>
+		            </page>
+		        </xpath>
+		        <xpath expr="/form/sheet/notebook/page[3]" position="after">
+		            <page string="Work Center Parameters" groups="flexible_printing.group_flexible_printing_manager">
+		            	<field name="hide_workcenter_parameter" invisible="1"></field>
+		            	<field name="workcenter_type_parameters" attrs="{'invisible': [('hide_workcenter_parameter', '=', True)]}" context="{'workcenter_id':workcenter_id}">
+							 <tree> 
+					            <field name="parameter" /> 
+					            <field name="value" /> 
+					        </tree> 
+						</field>
+		            </page>
+		        </xpath>
+		    </field>
+		</record>
+		<record model="ir.ui.view" id="routing_workcenter_parameters_form_view">
+	        <field name="name">flexible_printing.routing_workcenter_parameters.form</field>
+	        <field name="model">flex_print.routing_workcenter_parameters</field>
+	        <field name="arch" type="xml">
+	            <form string="Work Center Parameters">
+	            	<div class="row">
+	            		<div class="col-sm-6">
+	            			<group>
+			                 	<field name="parameter" widget="selection" />
+			                </group>
+	            		</div>
+	            		<div class="col-sm-6">
+	            			<group>
+			                 	<field name="value" />
+			                </group>
+	            		</div>
+	            	</div>
+	            </form>
+	        </field>
+    	</record>
+    	
+    	<record model="ir.ui.view" id="routing_workcenter_images_form_view">
+	        <field name="name">flexible_printing.routing_workcenter_image.form</field>
+	        <field name="model">flex_print.routing_workcenter_image</field>
+	        <field name="arch" type="xml">
+	            <form string="Product Images">
+	                <sheet>
+	                	<div class="row">
+		            		<div class="col-sm-6 col-lg-5">
+			                 	<div class="oe_title">
+			                        <label class="o_form_label small text-muted" for="name" string="Image Name"/>
+			                        <h2><field name="name" placeholder="Image Name" /></h2>
+			                    </div>
+		            		</div>
+		            		<div class="col-sm-6 col-lg-7 text-center o_website_sale_image_modal_container">
+			                 	<field name="image" widget="image" class="route_img" options="{'size': [90, 90]}"/>
+		            		</div>
+		            	</div>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+    
+    	<!-- <record model="ir.ui.view" id="routing_workcenter_images_form_view">
+	        <field name="name">flexible_printing.routing_workcenter_image.form</field>
+	        <field name="model">flex_print.routing_workcenter_image</field>
+	        <field name="arch" type="xml">
+	            <form string="Work Center Images">
+	            	<div class="row">
+	            		<div class="col-sm-6">
+	            			<group>
+			                 	<field name="name" />
+			                </group>
+	            		</div>
+	            		<div class="col-sm-6">
+	            			<group>
+			                 	<field name="image" string="Image" widget='image' class="oe_avatar" />
+			                </group>
+	            		</div>
+	            	</div>
+	            </form>
+	        </field>
+    	</record> -->
+    
+	</data>
+</odoo>
