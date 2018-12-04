@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<report 
+         string="Print Inquiry Specs" 
+         id="flexible_printing.action_report_opportunity_order" 
+         model="crm.lead" 
+         name="flexible_printing.opportunity_template"
+         file="flexible_printing.opportunity_template" 
+         report_type="qweb-html"
+         print_report_name="'Inquiry Specs - %s' % object.name"
+         groups="flexible_printing.group_flexible_printing_manager"
+     />
+     
+     <template id="opportunity_template">
+        	<style>
+	    		.header, .footer, .o_report_edit{
+					display:none !important; 
+				}
+				
+				.row {
+				    display: block !important;
+				    margin-right: -15px;
+				    margin-left: -15px;
+				    width: 100%;
+				    float: left;
+				    position: relative;
+				}
+				
+				.order_block{
+				    border: 2px solid;
+				    margin-top: 5px;
+				    padding: 2px;
+				    border-color: #0000008a;
+				}
+				
+				.col-xs-12 {
+				    width: 100%;
+				    padding-left: 15px;
+				    float: left;
+				    position: relative;
+				    padding-right: 15px;
+				}
+				.col-xs-6 {
+				    position: relative;
+				    float: left;
+				    width: 50%;
+				    padding-left: 15px;
+				    padding-right: 15px;
+				}
+				
+				
+				input[type="checkbox"]{
+					position: absolute;
+   					top: 5px;
+   					left:0;
+   					margin: 0 !important;
+   					z-index: -1;
+				}
+				
+				.checkbox_label{
+			        margin-left: 21px;
+				    font-weight: 400;
+				    margin-bottom: 0;
+				    margin-top: 2px;
+				}
+				.checkbox {
+				  width:20px;
+				  height:20px;
+				  border: 1px solid #000;
+				  display: inline-block;
+				  margin: 0 !important;
+			      background: #fff;
+   				  z-index: 1;
+   				  float:left;
+				}
+				.checkbox.checked:after {
+				  content: '';
+				  display: block;
+				  width: 4px;
+				  height: 7px;
+				  position:relative;
+				  top:4px;
+				  left:7px;
+				  border: solid #000;
+				  border-width: 0 2px 2px 0;
+				  transform: rotate(45deg);
+				}
+				
+				@media print {
+				    input[type="checkbox"] {
+				        display: none !important;
+				    }
+				}
+	    	</style>
+
+        	<t t-call="web.html_container">
+            	<t t-call="web.external_layout">
+            	
+			        <div class="container">
+               			<t t-foreach="docs" t-as="doc">
+               				<div class="row" style="display: block !important; width: 100%; float: left; position: relative; margin:0">
+	               				<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Order Date:&#160;</label>
+		       								<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/> 
+		               					</div>
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Inc./</label><span t-esc="doc.id"/> 
+		               					</div>
+		               				</div>
+	               				</div>
+	               				
+	               				<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Customer Name:&#160;</label><t t-esc="doc.partner_id.name" />
+		               					</div>
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Order Name:&#160;</label><t t-esc="doc.name" />
+		               					</div>
+		               				</div>
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Contact Person:&#160;</label><t t-esc="doc.contact_name" />
+		               					</div>
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Phone Number:&#160;</label><t t-esc="doc.phone" />
+		               					</div>
+		               				</div>
+	               				</div>
+	               				
+	               				<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.repeated_product">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Repeat Order</label>
+		          							</div>
+		               					</div>
+		              					
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Modifications Remarks:&#160;</label><t t-esc="doc.modifications_remarks" />
+		               					</div>
+	               					</div>
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0;">
+			          							<t t-if="doc.new_product">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">New Order</label>
+		          							</div>
+		               					</div>
+		               					
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Artwork:&#160;</label>
+		               						<t t-if="doc.product_artwork">
+		               							<t t-esc="dict(doc.fields_get(allfields=['product_artwork'])['product_artwork']['selection'])[doc.product_artwork]" />
+		               						</t>
+		               					</div>
+	               					</div>
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Product:&#160;</label>
+		               						
+		               						<t t-if="doc.customer_products.name">
+		          								<t t-esc="doc.customer_products.name" />
+		          							</t>
+		          							<t t-elif="doc.inquiry_product.name">
+		          								<t t-esc="doc.inquiry_product.name" />
+		          							</t>
+		               					</div>
+		               					
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Attached Type:&#160;</label>
+		               						<t t-if="doc.attached_type">
+		               							<t t-esc="dict(doc.fields_get(allfields=['attached_type'])['attached_type']['selection'])[doc.attached_type]" />
+		               						</t>
+		               					</div>
+	               					</div>
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Product Type:&#160;</label>
+		               						<t t-if="doc.product_type">
+		               							<t t-esc="dict(doc.fields_get(allfields=['product_type'])['product_type']['selection'])[doc.product_type]" />
+		               						</t>
+		               					</div>
+	               					</div>
+	               					<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.has_d2w">
+			          								<div class="checkbox checked"></div>
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/>  
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/>
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">D2W</label>
+		          							</div>
+		               					</div>
+		               					<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<label>Ink Type:&#160;</label>
+	               							<t t-esc="doc.ink_type" />
+		               					</div>
+	               					</div>
+	               				</div>
+	               				
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Printed:&#160;</label>
+			               					<t t-if="doc.printed">
+			               						<t t-esc="dict(doc.fields_get(allfields=['printed'])['printed']['selection'])[doc.printed]" />
+			               					</t>
+		               					</div>
+		               					
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Print Form:&#160;</label>
+			               					<t t-if="doc.printing_form">
+			               						<t t-esc="dict(doc.fields_get(allfields=['printing_form'])['printing_form']['selection'])[doc.printing_form]" />
+			               					</t>
+			               				</div>
+			               			</div>
+		               			</div>
+		               			
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.side_gusset">
+			          								<div class="checkbox checked"></div>
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/>  
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/>
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Side Gusset</label>
+		          							</div>
+		               					</div>
+			               				
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Side Gusset Width:&#160;</label><t t-esc="doc.side_gusset_width" />
+			               				</div>
+		               				</div>
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0;">
+			          							<t t-if="doc.bottom_gusset">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/>
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Bottom Gusset</label>
+		          							</div>
+		               					</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Bottom Gusset Width:&#160;</label><t t-esc="doc.bottom_gusset_width" />
+			               				</div>
+			               			</div>
+		               			</div>
+		               			
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Width (cm):&#160;</label><t t-esc="doc.width" />
+			               				</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Length (cm):&#160;</label><t t-esc="doc.length" />
+			               				</div>
+			               			</div>
+			               			<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Thickness (µ):&#160;</label><t t-esc="doc.thickness" />
+			               				</div>
+			               			</div>
+		               			</div>
+		               			
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Handle Type:&#160;</label><t t-esc="doc.handle_type.name" />
+			               				</div>
+			               				
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Seal Type:&#160;</label><t t-esc="doc.seal_type.name" />
+			               				</div>
+		               				</div>
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Handle Specs:&#160;</label>
+			               					<t t-foreach="doc.handle_attributes_vals" t-as="handle_att">
+												<t t-esc="handle_att.handle_attribute_id.name" />: <t t-esc="handle_att.value" />/ 
+											</t>
+			               				</div>
+			               				
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+		               						<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.lip_and_tape">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Lip And Tape</label>
+		          							</div>
+		               					</div>
+		               				</div>
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Lip Size (cm):&#160;</label><t t-esc="doc.lip_size" />
+			               				</div>
+			               			</div>
+			               			<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Options:&#160;</label>
+			               					<t t-foreach="doc.options" t-as="option">
+												<t t-esc="option.name" />, 
+											</t>
+			               				</div>
+		               				</div>
+		               			</div>
+		               			
+		               			<t t-if="doc.layer_1 or doc.layer_2 or doc.layer_3 or doc.layer_4">
+			               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+			               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               					<t t-if="doc.layer_1">
+					               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+					               					<label>First Layer:&#160;</label><t t-esc="doc.layer_1.name" />/ <t t-esc="doc.layer_1_thickness" /> (µ)
+					               				</div>
+					               			</t>
+					               			<t t-if="doc.layer_2">
+				               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+				               					<label>Second Layer:&#160;</label><t t-esc="doc.layer_2.name" />/ <t t-esc="doc.layer_2_thickness" /> (µ)
+				               				</div>
+				               				</t>
+				               			</div>
+				               			<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+				               				<t t-if="doc.layer_3">
+					               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+					               					<label>Third Layer:&#160;</label><t t-esc="doc.layer_3.name" />/ <t t-esc="doc.layer_3_thickness" /> (µ)
+					               				</div>
+				               				</t>
+				               				<t t-if="doc.layer_4">
+					               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+					               					<label>Fourth Layer:&#160;</label><t t-esc="doc.layer_4.name" />/ <t t-esc="doc.layer_4_thickness" /> (µ)
+					               				</div>
+					               			</t>
+				               			</div>
+			               			</div>	
+		               			</t>
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Package Type:&#160;</label>
+			               					<t t-if="doc.package_type">
+			               						<t t-esc="dict(doc.fields_get(allfields=['package_type'])['package_type']['selection'])[doc.package_type]" />
+			               					</t>
+			               				</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Package Size:&#160;</label><t t-esc="doc.package_size" />
+			               				</div>
+			               			</div>
+			               			<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Package Quantity:&#160;</label><t t-esc="doc.package_quantity" />&#160; <t t-if="doc.package_quantity_uom" ><t t-esc="doc.package_quantity_uom.name" /></t>
+			               				</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Packaging Specs:&#160;</label><t t-esc="doc.package_specs" />
+			               				</div>
+			               			</div>
+		               			</div>
+		               			
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.pallet">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Pallet</label>
+		          							</div>
+			               				</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<div class="col-xs-12" style="width: 100%; float: left; position: relative; padding: 0">
+			          							<t t-if="doc.sticker">
+			          								<div class="checkbox checked"></div> 
+			          								<input type="checkbox" checked="checked" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<t t-else="1">
+			          								<div class="checkbox"></div>
+			          								<input type="checkbox" style="position: absolute; top: 7px; left:0; margin: 0 !important;"/> 
+			          							</t>
+			          							<label class="checkbox_label" style="margin-left: 21px;font-weight: 400;margin-bottom: 0;margin-top: 0px;">Sticker</label>
+		          							</div>
+			               				</div>
+			               			</div>
+								</div>
+								
+		               			<div class="order_block col-xs-12" style="width: 100%; padding-left: 15px; float: left; position: relative; padding-right: 15px; border: 2px solid; margin-top: 5px;border-color: #0000008a;">
+		               				<div class="row" style="display: block !important; margin-right: -15px; margin-left: -15px; width: 100%; float: left; position: relative;">
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Delivery Date:&#160;</label> After <strong><t t-esc="doc.delivery_date" /> days</strong> from sales date
+			               				</div>
+			               				<div class="col-xs-6" style="width: 50%; padding-left: 15px; float: left; position: relative; padding-right: 15px;">
+			               					<label>Destination Remarks:&#160;</label><t t-esc="doc.destination_remarks" />
+			               				</div>
+			               			</div>
+								</div>
+								
+								<div class="col-xs-12" style="width: 100%; float: left; position: relative; margin-top: 20px;">
+									<label>Prepared By:&#160;</label><t t-esc="doc.user_id.name" /><br/><br/>
+									<label>Date:&#160;</label><t t-esc="doc.create_date" /><br/><br/>
+								</div>
+							</div>               			
+						</t>
+               		</div>
+			    </t>
+		    </t>
+	    </template>
+</odoo>

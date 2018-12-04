@@ -1,0 +1,190 @@
+<odoo>
+	<data>
+        <record id="flexible_printing.open_handle_attributes_tree" model="ir.ui.view">
+            <field name="name">flex_print.opp_h_values.tree</field>
+            <field name="model">flex_print.opp_h_values</field>
+            <field name="arch" type="xml">
+            	<tree editable="top">
+	            	<field name="handle_attribute_id" string="Handle Attribute" readonly="1" />
+	            	<field name="value" string="Value"/> 
+            	</tree>
+           </field>
+        </record>
+		        
+       	<record id="flexible_printing.open_handle_attributes" model="ir.actions.act_window">
+            <field name="name">Handle Attributes</field>
+            <field name="res_model">flex_print.opp_h_values</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="flexible_printing.open_handle_attributes_tree"/>
+          	<field name="target">new</field>
+        </record>
+        
+        <record id="flexible_printing.layers_type_form" model="ir.ui.view">
+            <field name="name">flex_print.layer_type.form</field>
+            <field name="model">flex_print.layer_type</field>
+            <field name="arch" type="xml">
+            	<form string="Layer Type Form">
+            		<sheet>
+		            	<div class="row">
+		            		<div class="col-sm-6">
+		            			<group>
+				                 	<field name="name" />
+				                </group>
+				             </div>
+				             <div class="col-sm-6">
+				                <group>
+				                 	<field name="thickness" string="Thickness (µ)" />
+				                </group>
+		            		 </div>
+		            		 <div class="col-sm-6">
+				                <group>
+				                 	<field name="density" string="Density" />
+				                </group>
+		            		 </div>
+		            	</div>
+		            </sheet>
+	            </form>
+           </field>
+        </record>
+        
+    	<record id="inherit_crm_lead" model="ir.ui.view">
+   			<field name="name">crm.lead.form.opportunity.inherited</field>
+		    <field name="model">crm.lead</field>
+		    <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+		    <field name="arch" type="xml">
+        		<xpath expr="/form/sheet/notebook/page[@name='lead']" position="after">
+            		<page name="product_info" string="Product Info" groups="flexible_printing.group_flexible_printing_manager">
+            		
+            			<style>
+            			.group_separator{
+            				margin-bottom: 20px !important;
+            			}
+            			
+            			.o_form_view .o_form_label {
+    						margin: 0 64px 0 0;
+    					}
+    					
+            			</style>
+            			
+						<div class="page_container">
+							<separator string="Type And Print" />
+							
+							<group col="4">
+								<field name="repeated_product" string="Repeated Product" />
+								<field name="modifications_remarks" string="Modif. Remarks" />
+								<field name="customer_products" string="Product" attrs="{'invisible':[('repeated_product', '!=', True)]}" domain="[('id','in', customer_products_prev)]" widget="selection" />
+							</group>
+							
+							<group col="4">
+								<field name="new_product" string="New Product" />
+								<field name="attached_type" string="Attached Type" />
+							</group>
+							<group>
+								<field name="product_artwork" string="Art Work" attrs="{'invisible':[('new_product', '!=', True)]}" />
+							</group>
+							<group col="4">
+								<field name="inquiry_product" string="Product Name" attrs="{'invisible':[('new_product', '!=', True)]}" readonly='1' />
+								<button string="Create/Edit New Product" type="object" icon="fa-arrow-right" name="create_new_product" context="{'active_id': id}"  attrs="{'invisible':[('new_product', '!=', True)]}"
+								groups="sales_team.group_sale_salesman,sales_team.group_sale_manager,mrp.group_mrp_manager,mrp.group_mrp_user" style="padding:0 !important"/>
+							</group>
+							
+							<group col="4" class="group_separator">
+								<field name="product_type" string="Product Type" />
+								<field name="customer_products_prev" invisible="1"/>
+							</group>
+							
+							<group col="4" class="group_separator">
+								<field name="has_d2w" string="D2W" />
+								<field name="ink_type" string="Ink Type" />
+							</group>
+							
+							<group col="4">	
+								<field name="printed" string="Printed"/>
+								<field name="printing_form" string="Print Form" attrs="{'invisible':[('printed', 'not in', ['ONE_SIDE', 'TWO_SIDES'])]}" />
+							</group>
+							
+							<separator string="Gusset" />
+							<group col="4" class="group_separator">
+								<field name="side_gusset" string="Side Gusset" />
+								<field name="bottom_gusset" string="Bottom Gusset" />
+								<field name="side_gusset_width" string="Side Gusset Width (cm)" attrs="{'invisible':[('side_gusset', '!=', True)]}" />
+								<field name="bottom_gusset_width" string="Bottom Gusset Width (cm)" attrs="{'invisible':[('bottom_gusset', '!=', True)]}" />
+							</group>
+							
+							<separator string="Dimensions" />
+							<group col="4" class="group_separator">
+								<field name="width" string="Width (cm)" />
+								<field name="length" string="Length (cm)" />
+								<field name="thickness" string="Thickness (µ)" />
+							</group>
+							
+							<separator string="Others" />
+							
+							<group col="4" class="group_separator">
+								<field name="lip_and_tape" string="Lip And Tape" />
+								<field name="lip_size" string="Lip Size (cm)" attrs="{'invisible':[('lip_and_tape', '!=', True)]}" />
+							</group>
+							
+							<group col="4">
+								<field name="handle_type" string="Handle" widget="many2one_tags" groups="flexible_printing.group_manage_handles_types"/>
+								<field name="seal_type" string="Seal" widget="many2one_tags" groups="flexible_printing.group_manage_seals_types" />
+							</group>
+							
+							<group col="4" class="group_separator">
+								<button string="Fill Handle Attributes" type="object" icon="fa-arrow-right" name="open_handle_attributes" context="{'handle_type': handle_type, 'active_id': id}" 
+								groups="flexible_printing.group_manage_handles_types"/>
+							</group>
+							
+							<group class="group_separator">
+								<field name="options" string="Options" widget="many2many_tags" />
+							</group>
+							
+							<separator string="Layers" />
+							<group col="6">
+								<field name="layer_1" string="First Layer" widget="many2one_tags" groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_1_thickness" string="Thickness (µ)"  groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_1_density" string="Density" groups="flexible_printing.group_manage_layers_types"/>
+							</group>
+							<group col="6">
+								<field name="layer_2" string="Second Layer"  widget="many2one_tags" groups="flexible_printing.group_manage_layers_types" />
+								<field name="layer_2_thickness" string="Thickness (µ)"  groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_2_density" string="Density" widget="many2one_tags" groups="flexible_printing.group_manage_layers_types"/>
+							</group>
+							<group col="6">
+								<field name="layer_3" string="Third Layer"  widget="many2one_tags" groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_3_thickness" string="Thickness (µ)"  groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_3_density" string="Density"  groups="flexible_printing.group_manage_layers_types"/>
+							</group>
+							<group col="6">
+								<field name="layer_4" string="Fourth Layer"  widget="many2one_tags" groups="flexible_printing.group_manage_layers_types" />
+								<field name="layer_4_thickness" string="Thickness (µ)" groups="flexible_printing.group_manage_layers_types"/>
+								<field name="layer_4_density" string="Density"  groups="flexible_printing.group_manage_layers_types"/>
+							</group>
+							
+							<separator string="Packaging and Delivery" />
+							<group col="4" class="group_separator">
+								<field name="package_type" string="Package Type" />
+								<field name="package_size" string="Package Size" />
+	 						</group>
+	 						<group col="4" class="group_separator">
+	 							<field name="package_quantity" string="Package Quantity" />
+	 							<field name="package_quantity_uom" string="Package Unit" groups="uom.group_uom"/>
+							</group>
+							<group class="group_separator">
+	 							<field name="package_specs" string="Packaging Specs" />
+							</group>
+							<group col="4" class="group_separator">
+								<field name="pallet" string="Pallet" />
+								<field name="sticker" string="Sticker" />
+							</group> 							
+	 						<group col="4" class="group_separator">
+	   							<field name="delivery_date" string="Delivery Date" />
+	   							<field name="destination_remarks" string="Destination Remarks" />
+							</group>
+						</div>
+		     		</page>
+      			</xpath>
+   	 		</field>
+		</record>
+	</data>
+</odoo>
